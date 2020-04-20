@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Lab 8: Denver home location exercise</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: rgb(43, 43, 43);
+            font-family: "Lato", sans-serif;
+            font-size: 100%;
+            font-weight: 300;
+            color: rgb(172, 172, 172);
+        }
+
+        header,
+        footer,
+        section {
+            padding: 6px 10%;
+            margin: 0 auto;
+            width: 80%
+        }
+
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: rgb(190, 190, 190);
+            font-size: 3.5em;
+            font-weight: 700;
+        }
+
+        h2 {
+            display: inline-block;
+            color: rgba(255, 200, 0, 0.8);
+            letter-spacing: 0.05em;
+            margin-top: 0px;
+            font-weight: 300;
+            text-transform: uppercase;
+            border-bottom: 1px dotted rgba(255, 200, 0, 0.5);
+            ;
+        }
+
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+
+        p {
+            font-size: 1em;
+            color: rgba(170, 170, 170);
+            ;
+            font-weight: 300;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Map Title</h1>
+        <h2>Map Subtitle</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Map authored by Chris Peters</p>
+        <p>Additional information about the data and map goes here.</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="data/denver-fire-stations.js"></script>
+    <script src="data/denver-food-stores.js"></script>
+    <script src="data/after-school-programs.js"></script>
+
+    <script>
+        var map = L.map('map', {
+            center: [39.7256, -104.9252],
+            zoom: 11,
+        });
+
+        var tiles = L.tileLayer(
+            'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/dark_all/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+
+
+        // Refactoring the code
+        // Define the desired layers and their colors to place 
+        // as JS object
+
+        var commonStyles = {
+            weight: 1,
+            stroke: false,
+            fillOpacity: 1.0
+        }
+
+
+        /* test to see if a single variable could be used to access all 3 layers using L.geoJson(). Test failed
+        var allData = {
+            programs,
+            sfasers,
+            stores
+        };
+        */
+
+        // Add key:value for variable
+        var layerInfo = {
+            programsLayer: {
+                source: "Programs",
+                color: '#660066',
+                variable: programs,
+                popupTitle: "ORGANIZATI"
+            },
+            stationsLayer: {
+                source: "Stations",
+                color: '#FF0000',
+                variable: stations,
+                popupTitle: "STATION_NU"
+            },
+            storesLayer: {
+                source: "Stores",
+                color: '#90C6DA',
+                variable: stores,
+                popupTitle: "STORE_NAME"
+            }
+        };
+
+
+        // Build empty JS object
+        var geoJsonLayers = {};
+        var i = 0;
+        // Loop through first object
+        for (var layer in layerInfo) {
+            // Populate the second object with all features that
+            // use variable in loop
+            geoJsonLayers[layer] = L.geoJson(layerInfo[layer].variable, {
+                // still need to reference stores and stations but it's not clear how to do this, as the lesson code
+                // uses only the single .js file here and L.geoJson cannot ingest all the file names at once; currently displays "programs" three times w/ three different colors
+
+                // we convert to a layer
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, commonStyles);
+                },
+
+                // and match the style given in first object
+                style: function (feature) {
+                    return {
+                        color: layerInfo[layer].color,
+                        fillColor: layerInfo[layer].color,
+
+                    }
+                }
+
+            }).addTo(map);
+            i++;
+        }
+
+        // Updated to show programs, stations, and stores
+        var sourcesLabels = {
+            "<b style='color:#660066'>Programs</b>": geoJsonLayers.programsLayer,
+            "<b style='color:#FF0000'>Stations</b>": geoJsonLayers.stationsLayer,
+            "<b style='color:#90C6DA; text-shadow: 0px 0px 1px #333;'>Stores</b>": geoJsonLayers.storesLayer
+
+        }
+
+        // No variable name changes req'd
+
+        L.control.layers(null, sourcesLabels, {
+            collapsed: false
+        }).addTo(map);
+
+        var radiusCircle = L.circle([0, 0], 1000, {
+            fillColor: 'white',
+            fillOpacity: .1,
+            color: 'yellow',
+            opacity: .3,
+            stroke: false,
+            weight: 3,
+            interactive: false // This allows users to click through the circle
+        })
+
+
+        // Loop through when clicking the map
+
+        map.on('click', function (e) {
+
+
+            // center circle location on current click point
+            radiusCircle.setLatLng(e.latlng)
+                .addTo(map);
+
+
+            // Loop through object containing geojson layers
+            for (var gsLayer in layerInfo) {
+
+
+
+                // Add a function to each layer geoJsonLayers object
+                // Important! We need to make a distinction between
+                // gsLayer (a key in layerInfo that matches a key in geoJsonLayers) 
+                // and layer (a function parameter)
+
+                geoJsonLayers[gsLayer].eachLayer(function (layer) {
+
+                    // Compare this output and understand how data are accessed
+                    console.log(`layerInfo[gsLayer]: ${layerInfo[gsLayer].source} \n*******\n`)
+                    console.log(`geoJsonLayers[gsLayer]: ${geoJsonLayers[gsLayer]} \n*******\n`)
+                    console.log(`gsLayer: ${gsLayer} \n*******\n`)
+                    console.log(`layer: ${layer} \n*******\n`)
+
+                    var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000; // in km
+
+                    if (distance > 1) {
+                        layer.setStyle({
+                            stroke: false,
+                            fill: true,
+                            fillOpacity: 0.1
+                        });
+                    } else {
+                        layer.setStyle({
+                            stroke: false,
+                            fill: true,
+                            fillOpacity: 1.0
+                        });
+
+                        // Create tooltip!
+                        // First get the properties of the for each geojson feature
+                        var props = layer.feature.properties;
+
+                        // need to access the actual value for each layer here!
+                        // currently undefined
+                        var content =
+                        // Access key:values in layer properties
+                            `<h3>${props[layerInfo[gsLayer].popupTitle]}</h3>`;
+
+
+                        // Get fancy with adding color to the popup
+                        content += `A <span style='color:${layerInfo[gsLayer].color}'>
+                                   ${layerInfo[gsLayer].source}</span> facility <b>
+                                   ${distance.toLocaleString()} km</b><br> 
+                                   from the click point.<br>`
+
+
+                        layer.bindTooltip(content);
+
+
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
