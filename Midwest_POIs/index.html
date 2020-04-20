@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<!-- Use the HTML and CSS you developed in module 01 to fill out this template.-->
+
+<head>
+  <meta charset=utf-8 />
+  <title>Lab 03 Work Template</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <link rel='icon' href='https://newmapsplus.github.io/favicon.ico' type='image/x-icon' />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" rel="stylesheet" />
+  <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,900i" rel="stylesheet">
+
+  <!-- Add links to external css stylesheets. -->
+  <link href="#" rel="stylesheet" />
+  <link href="#" rel="stylesheet" />
+  <link href="#" rel="stylesheet" />
+
+  <style>
+      /* CSS for styles go here */
+      body {
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      font-family: 'Lato', sans-serif;
+      /* matches NMP logo gray*/
+      font-weight: 300;
+      color: #4f4f4f;
+      font-size: 100%;
+    }
+
+    /* separate elements with the same properties by commas */
+    header,
+    section,
+    footer {
+      width: 80%;
+      margin: 10px auto;
+    }
+
+    h1 {
+      font-size: 2em;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      font-weight: 300;
+      letter-spacing: .04em;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.5em;
+    }
+
+    a {
+      color: #005daa;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 10px 0;
+    }
+
+
+    hr {
+      margin: 20px 0;
+      border: 0;
+      height: 1px;
+      background: #d3d3d3;
+    }
+
+    .caption {
+      margin: 0 0 20px 0;
+      display: block;
+    }
+
+    #map {
+      width: 100%;
+      height: 540px;
+      margin: 10px auto;
+      border: 2px solid #d3d3d3;
+    }
+
+    /*example*/
+    .highlight {
+      color: #f05716;
+      font-weight: bold;
+    }
+
+    .img-fill {
+      width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+
+
+    /* Use float property to make two-column layout */
+    .first-column {
+      float: left;
+      width: 49%;
+      padding-right: 2%;
+    }
+
+    .second-column {
+      float: left;
+      width: 49%;
+    }
+
+    /* Clear floats after columns */
+    .row::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    @media screen and (max-width: 900px) {
+
+      .first-column,
+      .second-column {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <!-- Add header information -->
+    <h1>Module 3 - "Looping Lab"</h1>
+  </header>
+  <section>
+    <!-- Add map and body content -->
+    <h2>An exploration of state capitals and city population patterns</h2>
+
+    <p>This map demonstrates using JavaScript to place map markers with tooltips (or popups) with meaningful information using array data structures, for loops, and if/else statements.</p>
+  </section>
+  <section>
+      <!-- Start row-->
+      <div class="row">
+  
+        <!-- Start left column -->
+        <div class="first-column">
+          <div id='map'></div>
+          <h2>about this map</h2>
+  
+          <p>I've often traveled between these cities using Interstate 55. There's not much topography to speak of (in fact, there's only ~1000 ft of difference between the highest and lowest points in the state!), but the drive can be scenic in its own right. According to <a href="https://en.wikipedia.org/wiki/Interstate_55">Wikipedia</a>, Interstate 55
+            was conceived of as a (partial) replacement for historic Route 66, at least through much of Illinois. As for the cities shown here, population data was obtained from the <a href='https://census.gov/'>U.S. Census</a> website. The photos here show locations in various states of illumination.
+          </p>
+     
+           <ul>
+            <li>See my projects on GitHub: <a href="https://github.com/CPE3">Chris Peters</a></li>
+            <li>Follow me on twitter: <a href="https://twitter.com/NewMapsPlus">@NewMapsPlus</a></li>
+            <li>Visit the program's website: <a href='https://newmapsplus.uky.edu/explore-new-maps'>New Maps Plus</a></li>
+          </ul>
+          <!-- End first column-->
+        </div>
+  
+        <!-- Start right column-->
+        <div class="second-column">
+            <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.tripsavvy.com%2Fthmb%2FcBgNHFPQ5vOOBMKKriCiuf9DdEY%3D%2F4184x2779%2Ffilters%3Afill(auto%2C1)%2Fgateway-to-the-west-561452183-5975330db501e800117858c8.jpg&f=1&nofb=1"
+            alt="Photo of St. Louis Arch" class="img-fill">
+            <div class="caption">The Gateway Arch, St. Louis, Missouri</div>
+            <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.citi.io%2Fwp-content%2Fuploads%2F2016%2F07%2F2064-01-springfieldillinois.jpg&f=1&nofb=1"alt="Photo of Springfield state capital building" class="img-fill">
+            <div class="caption">Springfield, Illinois</div>
+            <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flrzx641zf4f141zb9342prt6-wpengine.netdna-ssl.com%2Fwp-content%2Fuploads%2F2017%2F07%2Fedited-original-photo-the-bean-chicago-by-f11photo-shutterstock.jpg&f=1&nofb=1" alt="Photo of Chicago's Millenium Park Bean" class="img-fill">
+            <div class="caption">An arch of sorts in Chicago, Illinois</div>
+            
+            <!-- End right column-->
+          </div>
+        </div>
+  
+        <!-- End row column-->
+      </div>
+    </section>
+
+
+    <p>Map authored by Chris Peters</p>
+  </section>
+  <footer>
+    <!-- Add footer information -->
+    <hr>
+    <a href="https://newmapsplus.github.io">
+      <img src="https://newmapsplus.github.io/assets/graphics/logo-2018-nmp-75px-h-gray.png"
+        alt="University of Kentucky New Maps Plus">
+    </a>
+
+    <a href="https://uky-gis.github.io">
+      <img src="https://newmapsplus.github.io/assets/graphics/logo-2018-geography-75px-h.png"
+        alt="University of Kentucky Department of Geography">
+    </a>
+  </footer>
+
+  <!-- Add link to Leaflet JavaScript library. -->
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+  <!-- Custom JavaScript -->
+  
+  <script>
+    // initial map options
+    var options = {
+      center: [39.7637533,-89.8109153],
+      zoom: 5
+    }
+
+  // instantiate Leaflet map object
+  var map = L.map('map', options);
+
+  // Get basemap URL from Leaflet Providers
+  var basemap_url = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
+  
+
+  // Get basemap attributes from Leaflet Providers
+  var basemap_attributes = {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+  }
+  
+  
+    // Add tileset as a layer in our map
+    var tiles = L.tileLayer(basemap_url, basemap_attributes);
+
+    // Add tiles to map
+    map.addLayer(tiles);
+
+
+/* Your task is to write a for loop structure to cycle through all elements 
+ in the cities array, create a new Leaflet marker for each city using that city's coordinates, and bind the
+  popup population information to each. The popup should also include a statement indicating whether or not 
+  the city is a capital city (i.e., "is the capital city"). Study the final examples in Lesson 03 for additional guidance. */
+
+
+    // Declare a variable named cities and assign an array to it, containing the string value names of your three cities.
+    var cities = ["St. Louis", "Springfield", "Chicago"]
+   
+    // Declare a 2-dimensional array named cityCoords that contains three elements: 
+    // each one an array containing the latitude and longitude of each of the three cities listed in the cities array.
+    var cityCoords = [[38.628264,-90.1983494],[39.7984623,-89.6575763],[41.8788764,-87.6381036]]
+
+    // Create two more arrays, named cityPops and cityCapital. 
+    // The cityPops array should contain the populations of the respective cities in the cities array 
+    // (again, be careful with the order of these as they should be congruent with the other arrays already created). 
+    // The cityCapitals array should contain three Boolean values (i.e., true or false) designating whether the corresponding city
+    //  in the cities array is or is not the capital of the state or country you're mapping.
+    var cityPops = [308428, 114694, 2705994]
+    var cityCapital = [false, true, false]
+
+
+    // Iterate through array using indexes to access values
+    for (var i = 0; i < cities.length; i++) {
+      // test if cityCapital array element is true
+      if (cityCapital[i] === true) {
+        var cap = "<br>This is the state Capital! Is the General Assembly in session?</b>";
+      } else {
+        var cap = "";
+      }
+            
+   // Build popup
+    var locationPopup = 
+    "<h2>" + cities[i] + "</h2>" + 
+    "The location of " + cities[i] + " is " + cityCoords[i][0] + " degrees latitude, and " + cityCoords[i][1] + " degrees longitude. <p>" + 
+    " Its population is " + cityPops[i] + "." + "<br></br>" + cap; 
+   
+    // create a Leaflet marker at the coordinates of each city
+    // add it to the map
+    // and bind the popup content to the marker.
+
+    L.marker(cityCoords[i])
+        .addTo(map)
+        .bindPopup(locationPopup);
+
+    };
+
+ </script>
+
+</body>
